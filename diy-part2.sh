@@ -102,6 +102,15 @@ git pull
 cd ..
 fi
 
+echo "luci-app-pptp-server"
+if [ ! -d "./luci-app-pptp-server" ];then
+git clone https://github.com/xkstudio/luci-app-pptp-server.git
+else
+cd luci-app-pptp-server
+git pull
+cd ..
+fi
+
 echo "luci-app-serverchan"
 if [ ! -d "./luci-app-serverchan" ];then
 git clone https://github.com/tty228/luci-app-serverchan.git
