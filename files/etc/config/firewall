@@ -202,6 +202,16 @@ config redirect
 	option dest_ip '192.168.6.130'
 	option dest_port '32400'
 	option name 'nas-plex'
+	
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '1723'
+	option dest_ip '192.168.6.1'
+	option dest_port '1723'
+	option name 'pptp-server'
 
 config redirect
 	option target 'DNAT'
