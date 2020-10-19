@@ -160,7 +160,7 @@ config redirect
 	option proto 'tcp udp'
 	option src_dport '49091'
 	option dest_ip '192.168.6.130'
-	option dest_port '49091'
+	option dest_port '49092'
 	option name 'nas-transmission'
 
 config redirect
