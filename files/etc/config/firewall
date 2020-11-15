@@ -178,16 +178,6 @@ config redirect
 	option src 'wan'
 	option dest 'lan'
 	option proto 'tcp udp'
-	option src_dport '49091'
-	option dest_ip '192.168.6.130'
-	option dest_port '49092'
-	option name 'nas-transmission'
-
-config redirect
-	option target 'DNAT'
-	option src 'wan'
-	option dest 'lan'
-	option proto 'tcp udp'
 	option src_dport '9123'
 	option dest_ip '192.168.6.130'
 	option dest_port '9123'
@@ -395,13 +385,3 @@ config redirect
 	option dest_ip '192.168.6.130'
 	option dest_port '8096'
 	option name 'nas-emby'
-
-config redirect
-	option target 'DNAT'
-	option src 'wan'
-	option dest 'lan'
-	option proto 'tcp udp'
-	option src_dport '8097'
-	option dest_ip '192.168.6.132'
-	option dest_port '8096'
-	option name 'win7-emby'
