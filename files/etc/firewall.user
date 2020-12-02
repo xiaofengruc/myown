@@ -1,0 +1,16 @@
+# This file is interpreted as shell script.
+# Put your custom iptables rules here, they will
+# be executed with each firewall (re-)start.
+
+# Internal uci firewall chains are flushed and recreated on reload, so
+# put custom rules into the root chains e.g. INPUT or FORWARD or into the
+# special user chains, e.g. input_wan_rule or postrouting_lan_rule.
+iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-ports 53
+iptables -t nat -A PREROUTING -p tcp --dport 53 -j REDIRECT --to-ports 53
+MODEMIP=192.168.1.1
+MODEM_NET=`echo $MODEMIP | cut -d "." -f 1-3`
+ROUTER_WAN_PORT_IP=192.168.1.2
+WAN_PORT=eth1
+ifconfig $WAN_PORT $ROUTER_WAN_PORT_IP netmask 255.255.255.0 broadcast $MODEM_NET.255
+iptables -A forwarding_rule -d $MODEMIP -j ACCEPT
+iptables -t nat -A postrouting_rule -d $MODEMIP -o $WAN_PORT -j MASQUERADE
