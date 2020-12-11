@@ -93,15 +93,6 @@ svn update
 cd ..
 fi
 
-echo "luci-app-diskman"
-if [ ! -d "./luci-app-diskman" ];then
-git clone https://github.com/lisaac/luci-app-diskman.git
-else
-cd luci-app-diskman
-git pull
-cd ..
-fi
-
 echo "luci-app-pptp-server"
 if [ ! -d "./luci-app-pptp-server" ];then
 git clone https://github.com/xkstudio/luci-app-pptp-server.git
