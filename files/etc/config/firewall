@@ -1,0 +1,449 @@
+
+config defaults
+	option syn_flood '1'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option fullcone '1'
+	option flow_offloading '1'
+	option flow_offloading_hw '0'
+
+config zone
+	option name 'lan'
+	list network 'lan'
+	option input 'ACCEPT'
+	option output 'ACCEPT'
+	option forward 'ACCEPT'
+
+config zone
+	option name 'wan'
+	list network 'wan'
+	list network 'wan6'
+	option input 'REJECT'
+	option output 'ACCEPT'
+	option forward 'REJECT'
+	option masq '1'
+	option mtu_fix '1'
+
+config forwarding
+	option src 'lan'
+	option dest 'wan'
+
+config rule
+	option name 'Allow-DHCP-Renew'
+	option src 'wan'
+	option proto 'udp'
+	option dest_port '68'
+	option target 'ACCEPT'
+	option family 'ipv4'
+
+config rule
+	option name 'Allow-Ping'
+	option src 'wan'
+	option proto 'icmp'
+	option icmp_type 'echo-request'
+	option family 'ipv4'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-IGMP'
+	option src 'wan'
+	option proto 'igmp'
+	option family 'ipv4'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-DHCPv6'
+	option src 'wan'
+	option proto 'udp'
+	option src_ip 'fc00::/6'
+	option dest_ip 'fc00::/6'
+	option dest_port '546'
+	option family 'ipv6'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-MLD'
+	option src 'wan'
+	option proto 'icmp'
+	option src_ip 'fe80::/10'
+	list icmp_type '130/0'
+	list icmp_type '131/0'
+	list icmp_type '132/0'
+	list icmp_type '143/0'
+	option family 'ipv6'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-ICMPv6-Input'
+	option src 'wan'
+	option proto 'icmp'
+	list icmp_type 'echo-request'
+	list icmp_type 'echo-reply'
+	list icmp_type 'destination-unreachable'
+	list icmp_type 'packet-too-big'
+	list icmp_type 'time-exceeded'
+	list icmp_type 'bad-header'
+	list icmp_type 'unknown-header-type'
+	list icmp_type 'router-solicitation'
+	list icmp_type 'neighbour-solicitation'
+	list icmp_type 'router-advertisement'
+	list icmp_type 'neighbour-advertisement'
+	option limit '1000/sec'
+	option family 'ipv6'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-ICMPv6-Forward'
+	option src 'wan'
+	option dest '*'
+	option proto 'icmp'
+	list icmp_type 'echo-request'
+	list icmp_type 'echo-reply'
+	list icmp_type 'destination-unreachable'
+	list icmp_type 'packet-too-big'
+	list icmp_type 'time-exceeded'
+	list icmp_type 'bad-header'
+	list icmp_type 'unknown-header-type'
+	option limit '1000/sec'
+	option family 'ipv6'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-IPSec-ESP'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'esp'
+	option target 'ACCEPT'
+
+config rule
+	option name 'Allow-ISAKMP'
+	option src 'wan'
+	option dest 'lan'
+	option dest_port '500'
+	option proto 'udp'
+	option target 'ACCEPT'
+
+config include
+	option path '/etc/firewall.user'
+
+config forwarding 'vpnwan'
+	option src 'vpn'
+	option dest 'wan'
+
+config forwarding 'vpnlan'
+	option src 'vpn'
+	option dest 'lan'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '12312'
+	option dest_ip '192.168.6.1'
+	option dest_port '80'
+	option name 'openwrt-web'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '34040'
+	option dest_port '80'
+	option name 'R6800'
+	option dest_ip '192.168.6.141'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '49091'
+	option dest_ip '192.168.6.130'
+	option dest_port '49092'
+	option name 'nas-transmission'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '32780'
+	option dest_ip '192.168.6.130'
+	option dest_port '32780'
+	option name 'nas-calibreserver'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '9123'
+	option dest_ip '192.168.6.130'
+	option dest_port '9123'
+	option name 'nas-Portainer'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '8083'
+	option dest_ip '192.168.6.130'
+	option dest_port '8083'
+	option name 'nas-calibre'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '51111'
+	option dest_ip '192.168.6.130'
+	option dest_port '5000'
+	option name 'nas-web'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '32400'
+	option dest_ip '192.168.6.130'
+	option dest_port '32400'
+	option name 'nas-plex'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '1723'
+	option dest_ip '192.168.6.1'
+	option dest_port '1723'
+	option name 'pptp-server'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '6564'
+	option dest_ip '192.168.6.130'
+	option dest_port '6564'
+	option name 'Forward6564'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '6009'
+	option dest_ip '192.168.6.130'
+	option dest_port '6009'
+	option name 'Forward6009'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp'
+	option src_dport '33333'
+	option dest_ip '192.168.6.130'
+	option dest_port '21'
+	option name 'nas-ftp'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '33334'
+	option dest_ip '192.168.6.130'
+	option dest_port '22'
+	option name 'nas-ssh'
+
+config rule 'openvpn'
+	option name 'openvpn'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto 'tcp udp'
+	option dest_port '1194'
+
+config zone 'vpn'
+	option name 'vpn'
+	option input 'ACCEPT'
+	option forward 'ACCEPT'
+	option output 'ACCEPT'
+	option masq '1'
+	option network 'vpn0'
+
+config forwarding 'vpntowan'
+	option src 'vpn'
+	option dest 'wan'
+
+config forwarding 'vpntolan'
+	option src 'vpn'
+	option dest 'lan'
+
+config forwarding 'lantovpn'
+	option src 'lan'
+	option dest 'vpn'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '8096'
+	option dest_ip '192.168.6.130'
+	option dest_port '8096'
+	option name 'nas-emby'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '32768'
+	option dest_ip '192.168.6.130'
+	option dest_port '32768'
+	option name 'nextcloud'
+
+config include 'vssr'
+	option type 'script'
+	option path '/var/etc/vssr.include'
+	option reload '1'
+
+config include 'bypass'
+	option type 'script'
+	option path '/var/etc/bypass.include'
+	option reload '1'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '428'
+	option dest_ip '192.168.6.130'
+	option dest_port '428'
+	option name 'Forward428'
+
+config redirect
+	option target 'DNAT'
+	option src 'wan'
+	option dest 'lan'
+	option proto 'tcp udp'
+	option src_dport '8097'
+	option dest_ip '192.168.6.144'
+	option dest_port '8096'
+	option name 'Forward8097'
+
+config include 'zerotier'
+	option type 'script'
+	option path '/etc/zerotier.start'
+	option reload '1'
+
+config include 'miniupnpd'
+	option type 'script'
+	option path '/usr/share/miniupnpd/firewall.include'
+	option family 'any'
+	option reload '1'
+
+config include 'adbyby'
+	option type 'script'
+	option path '/var/etc/adbyby.include'
+	option reload '1'
+
+config rule 'adblock'
+	option name 'adblock'
+	option target 'DROP'
+	option src 'wan'
+	option proto 'tcp'
+	option dest_port '8118'
+
+config include 'ipsecd'
+	option type 'script'
+	option path '/etc/ipsec.include'
+	option reload '1'
+
+config rule 'ike'
+	option name 'ike'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto 'udp'
+	option dest_port '500'
+
+config rule 'ipsec'
+	option name 'ipsec'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto 'udp'
+	option dest_port '4500'
+
+config rule 'ah'
+	option name 'ah'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto 'ah'
+
+config rule 'esp'
+	option name 'esp'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto 'esp'
+
+config include 'mia'
+	option type 'script'
+	option path '/etc/mia.include'
+	option reload '1'
+
+config include 'softethervpn'
+	option type 'script'
+	option path '/usr/share/softethervpn/firewall.include'
+	option reload '1'
+
+config include 'shadowsocksr'
+	option type 'script'
+	option path '/var/etc/shadowsocksr.include'
+	option reload '1'
+
+config include 'unblockmusic'
+	option type 'script'
+	option path '/var/etc/unblockmusic.include'
+	option reload '1'
+
+config rule 'kms'
+	option name 'kms'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto 'tcp'
+	option dest_port '1688'
+
+config include 'wrtbwmon'
+	option type 'script'
+	option path '/etc/wrtbwmon.include'
+	option reload '1'
+
+config include 'pptpd'
+	option type 'script'
+	option path '/etc/pptpd.include'
+	option reload '1'
+
+config rule 'pptp'
+	option name 'pptp'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto 'tcp'
+	option dest_port '1723'
+
+config rule 'gre'
+	option name 'gre'
+	option target 'ACCEPT'
+	option src 'wan'
+	option proto '47'
+
+
