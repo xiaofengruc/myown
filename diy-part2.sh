@@ -137,6 +137,13 @@ git pull
 cd ..
 fi
 
+echo "luci-app-passwall"
+if [ ! -d "./luci-app-passwall" ];then
+git clone https://github.com/xiaorouji/openwrt-passwall.git
+cd luci-app-passwall
+git pull
+cd ..
+fi
 # 返回到myapp文件夹
 cd ..
 
