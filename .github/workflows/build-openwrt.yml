@@ -23,7 +23,7 @@ env:
   DIY_P1_SH: diy-part1.sh
   DIY_P2_SH: diy-part2.sh
   MRG_ADD_SH: x86_64/x86_64.sh
-  SSH_ACTIONS: TRUE
+#  SSH_ACTIONS: TRUE
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
   TZ: Asia/Shanghai
@@ -114,9 +114,9 @@ jobs:
         $GITHUB_WORKSPACE/$MRG_ADD_SH
         sed -i 's/OpenWrt/MRG AutoBuild ${{ env.DATE1 }} @ OpenWrt/g' package/lean/default-settings/files/zzz-default-settings
         
-    - name: SSH connection to Actions
-      uses: P3TERX/debugger-action@master
-      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+#    - name: SSH connection to Actions
+#      uses: P3TERX/debugger-action@master
+#      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
 
     - name: Download package
       id: package
